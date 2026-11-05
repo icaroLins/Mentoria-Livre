@@ -1,9 +1,6 @@
 package com.mentorialivre.mentoria_livre.controller;
 
-import com.mentorialivre.mentoria_livre.dto.AuthResponse;
-import com.mentorialivre.mentoria_livre.dto.LoginRequest;
-import com.mentorialivre.mentoria_livre.dto.RegisterRequest;
-import com.mentorialivre.mentoria_livre.dto.UserResponse;
+import com.mentorialivre.mentoria_livre.dto.*;
 import com.mentorialivre.mentoria_livre.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -38,5 +35,17 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(
+            @RequestBody RefreshRequest request
+    ) {
+
+        AuthResponse response = authService.refresh(
+                request.refreshToken()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
