@@ -43,4 +43,13 @@ public class OpenAPIConfig {
                .build();
     }
 
+    @Bean
+    public GroupedOpenApi mentoriaAPI(){
+        return GroupedOpenApi.builder()
+                .group("mentoria")
+                .pathsToMatch("/mentoria/**")
+                .build();
+    }
+
+
 }
