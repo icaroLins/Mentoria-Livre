@@ -36,8 +36,11 @@ public class SecurityConfig {
 
                         //Cadastro e login dos usuários.
                         .requestMatchers(
-                                HttpMethod.POST, "/auth/register",
-                                "/auth/login").permitAll()
+                                HttpMethod.POST,
+                                "/auth/register",
+                                "/auth/login",
+                                "/auth/refresh"
+                        ).permitAll()
 
                         // Documentação
                         .requestMatchers(
