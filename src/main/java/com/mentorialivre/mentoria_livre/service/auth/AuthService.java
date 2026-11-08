@@ -8,39 +8,61 @@ import com.mentorialivre.mentoria_livre.model.user.User;
 import com.mentorialivre.mentoria_livre.repository.user.UserRepository;
 import com.mentorialivre.mentoria_livre.service.token.RefreshTokenService;
 import com.mentorialivre.mentoria_livre.service.token.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.mentorialivre.mentoria_livre.service.passwordResetToken.PasswordResetTokenService;
+import java.util.Optional;
+import com.mentorialivre.mentoria_livre.service.Email.EmailService;
+
 
 @Service
 public class AuthService {
-
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
-    @Autowired
     private final AuthenticationManager authenticationManager;
-    @Autowired
     private final TokenService tokenService;
-    @Autowired
     private final RefreshTokenService refreshTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
+    private final EmailService emailService;
+    
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
                        TokenService tokenService,
-                       RefreshTokenService refreshTokenService) {
+                       RefreshTokenService refreshTokenService,
+                       PasswordResetTokenService passwordResetTokenService,
+                       EmailService emailService) {
+
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.refreshTokenService = refreshTokenService;
+        this.passwordResetTokenService = passwordResetTokenService;
+        this.emailService = emailService;
     }
+
+    // Solicita a recuperação de senha para um usuário cadastrado.
+@Transactional
+public void requestPasswordRecovery(PasswordRecoveryRequest request) {
+
+    String email = request.email().trim().toLowerCase();
+
+    Optional<User> userOptional = userRepository.findByEmail(email);
+
+    if (userOptional.isEmpty()) {
+        return;
+    }
+
+    User user = userOptional.get();
+
+    String rawToken = passwordResetTokenService.createToken(user);
+}
 
     @Transactional
     public UserResponse register(RegisterRequest request) {
