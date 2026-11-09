@@ -58,4 +58,12 @@ public class OpenAPIConfig {
                 .pathsToMatch("/inscricao/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi mensagemAPI(){
+        return GroupedOpenApi.builder()
+                .group("mensagem")
+                .pathsToMatch("/api/mentorias/**")
+                .build();
+    }
 }
