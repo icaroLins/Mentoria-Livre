@@ -9,7 +9,8 @@ public record InscricaoResponse(
         String nome,
         String titulo_mentoria,
         String nomeMentor,
-        UUID mentorado_id
+        UUID mentorado_id,
+        Integer quantidade
 ) {
     public static InscricaoResponse from(Inscricao inscricao) {
        return new InscricaoResponse(
@@ -17,7 +18,8 @@ public record InscricaoResponse(
                inscricao.getMentorado().getNome(),
                inscricao.getMentoria().getTitulo(),
                inscricao.getMentoria().getMentor().getNome(),
-               inscricao.getMentorado().getId()
+               inscricao.getMentorado().getId(),
+               inscricao.getMentoria().getQuantidade()
        );
     }
 }

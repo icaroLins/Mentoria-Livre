@@ -34,6 +34,8 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
+                        .requestMatchers("/ws").permitAll()
+
                         //Cadastro e login dos usuários.
                         .requestMatchers(
                                 HttpMethod.POST,
