@@ -2,6 +2,8 @@ package com.mentorialivre.mentoria_livre.service.mentoria;
 
 import com.mentorialivre.mentoria_livre.dto.GenerateMentoriaRequest;
 import com.mentorialivre.mentoria_livre.dto.MentoriaResponse;
+import com.mentorialivre.mentoria_livre.dto.UpdateMentoriaRequest;
+import com.mentorialivre.mentoria_livre.exception.ResourceNotFoundException;
 import com.mentorialivre.mentoria_livre.model.mentoria.Mentoria;
 import com.mentorialivre.mentoria_livre.model.mentoria.StatusMentoria;
 import com.mentorialivre.mentoria_livre.model.user.Mentor;
@@ -25,6 +27,24 @@ public class MentoriaService {
     private MentoriaRepository mentoriaRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Transactional
+    public MentoriaResponse editarMentoria(Long id, UpdateMentoriaRequest request, User user) {
+        if (user == null || user.getRole() != Role.MENTOR) {
+            throw new AccessDeniedException("Apenas mentores podem editar mentorias");
+        }
+        Mentoria mentoria = mentoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Mentoria nao encontrada"));
+        if (!mentoria.getMentor().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Apenas o mentor responsavel pode editar esta mentoria");
+        }
+        if (request.titulo() != null) mentoria.setTitulo(request.titulo());
+        if (request.statusMentoria() != null) mentoria.setStatus(request.statusMentoria());
+        if (request.quantidade() != null) mentoria.setQuantidade(request.quantidade());
+        if (request.data() != null) mentoria.setData(request.data());
+        if (request.descricao() != null) mentoria.setDescricao(request.descricao());
+        return MentoriaResponse.from(mentoriaRepository.save(mentoria));
+    }
 
     @Transactional
     public MentoriaResponse criarMentoria(GenerateMentoriaRequest generateMentoriaRequest, User user){

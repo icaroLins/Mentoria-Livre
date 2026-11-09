@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
 @Service
 public class MensagemService {
 
@@ -51,6 +53,7 @@ public class MensagemService {
         mensagem.setConteudo(request.conteudo().trim());
         mensagem.setMentoria(mentoria);
         mensagem.setUser(remetente);
+        mensagem.setDataEnvio(Instant.now());
 
         Mensagens mensagemSalva = mensagemRepository.save(mensagem);
 
