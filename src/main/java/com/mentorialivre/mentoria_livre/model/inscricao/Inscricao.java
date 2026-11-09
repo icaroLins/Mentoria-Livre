@@ -29,4 +29,8 @@ public class Inscricao {
 
     @Column(name = "create_at")
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusInscricao statusInscricao;
 }
